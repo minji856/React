@@ -73,3 +73,20 @@ const mankind : MANKIND = {
     weight:70,
     name:"john"
 }
+
+
+// 2. Interface
+
+interface IMANKIND {
+    name: string,
+    age: number,
+    height: number,
+    weight: number
+}
+
+const mankind_data:IMANKIND = {
+    name: "홍길동",
+    weight:80,
+    height:180,
+    age:30
+}
