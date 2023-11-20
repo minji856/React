@@ -1,9 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import "./Square.css";
 
-export default function Square (props) {React.ReactElement} {
+/*
+const Square = (props) => {
     return (
       <button className="square" 
-      onClick={()=>this.props.onClick()}>{this.props.value}</button>
+      onClick={()=>props.onClick()}>{props.value}</button>
     )
 }
+*/
+const Square = ({onClick, value}) => {
+    return (
+      <button className="square" onClick={onClick}>{value}</button>
+    )
+}
+
+export default Square;
