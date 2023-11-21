@@ -4,11 +4,13 @@ import "./Board.css";
 
 const Board = () => {
     const [squares, setSquares] = useState(Array(9).fill(null));
+    const [xIsNext, setxIsNext] = useState(true);
 
     const handleClick = (i) => {
         const newSquares = squares.slice();
-        newSquares[i] = 'X';
+        newSquares[i] = xIsNext ? 'X' : 'O';
         setSquares(newSquares);
+        setxIsNext(!xIsNext);
     }
 
     // 넘버링 해주기 위해서 함수로 만듦.
