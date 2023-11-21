@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Square.css";
 
-/*
+/* props로 받을 때
 const Square = (props) => {
     return (
       <button className="square" 
@@ -9,6 +9,7 @@ const Square = (props) => {
     )
 }
 */
+
 const Square = ({onClick, value}) => {
     return (
       <button className="square" onClick={onClick}>{value}</button>
