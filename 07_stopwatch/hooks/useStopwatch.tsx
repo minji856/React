@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
+import { INTERVAL, MILLISEC_PER_SECOND } from '../constants';
 
 // STATUS의 타입 지정
 export enum STATUS {
@@ -36,17 +37,53 @@ const useStopwatch: () => UseStopwatchReturnType = () => {
     const [laps, setLaps] = React.useState<Lap[]>([]);
     const nextLap = React.useMemo<Lap>(()=>{
         return {
-            id:0,
-            title: "랩",
-            seconds: 0
+            id:laps.length + 1, // 다음꺼. 구별하기 위해 고유식별 추가
+            title: `랩 ${laps.length + 1}`,
+            seconds: seconds
         }
-    }, []); // 별도로 계산을 해줘야하는. 이전까지 기록된거에서 시간이 돌아가야함
-
-    const start = React.useCallback(()=>{}, []);
-    const stop = React.useCallback(()=>{}, []);
-    const reset = React.useCallback(()=>{}, []);
-    const record = React.useCallback(()=>{}, []);
+    }, [seconds, laps]); // 별도로 계산을 해줘야하는. 이전까지 기록된거에서 시간이 돌아가야함
     
+    const start = React.useCallback(()=>{   
+        if(status !== STATUS.STOP){
+            return;
+        }
+        setStatus(STATUS.PROCESSING);
+    }, [status]);
+
+    const stop = React.useCallback(()=>{
+        // 이미 중지된 상태에서 
+        if(status !== STATUS.PROCESSING){
+            return;
+        }
+        setStatus(STATUS.STOP);
+    }, [status]);
+
+    const reset = React.useCallback(()=>{
+        setSeconds(0);
+        setLaps([]);
+    }, []);
+
+    const record = React.useCallback(()=>{
+        setLaps((prev)=>[nextLap, ...prev])
+    }, [status, nextLap]);
+    
+    // 특정한 시점 lifecycle에만 실행되게
+    React.useEffect(()=>{
+        let intervalId:number;
+
+        if(status === STATUS.PROCESSING){
+            // 반복 돌면서 시간을 뿌려줄건데 여기선 값만 구해 주고 넘기기
+            intervalId = window.setInterval(()=>{
+                setSeconds((prev)=>{return prev + INTERVAL/MILLISEC_PER_SECOND})
+            }, INTERVAL);
+        }
+        // clear 시키는 작업
+        return () => {
+            window.clearInterval(intervalId);
+        }
+
+    }, [status]);
+
     return {seconds, status, laps, nextLap, start, stop, reset, record};
 }
 
